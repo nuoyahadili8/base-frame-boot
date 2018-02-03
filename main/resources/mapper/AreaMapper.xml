@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.al.dao.AreaDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap type="com.github.al.entity.Area" id="areaMap">
+		<result property="areaId" column="area_id"/>
+		<result property="areaName" column="area_name"/>
+		<result property="enName" column="en_name"/>
+		<result property="wordIndex" column="word_index"/>
+		<result property="parentAreaId" column="parent_area_id"/>
+		<result property="parentAreaName" column="parent_area_name"/>
+		<result property="sortNo" column="sort_no"/>
+		<result property="areaLevel" column="area_level"/>
+		<result property="isCity" column="is_city"/>
+		<result property="region" column="region"/>
+		<result property="levelArea" column="level_area"/>
+		<result property="state" column="state"/>
+		<result property="postCode" column="post_code"/>
+		<result property="xzCode" column="xz_code"/>
+	</resultMap>
+
+	<select id="queryObject" resultType="com.github.al.entity.Area">
+		select * from t_area where area_id = #{value}
+	</select>
+
+	<select id="findByParentId" resultType="com.github.al.entity.Area">
+		select * from t_area where parent_area_id = #{value}
+	</select>
+
+	<select id="getAreaListByIsShow" resultType="com.github.al.entity.Area">
+		select t.*
+		from t_area t
+		where 1=1
+		<if test="parentAreaId != null and parentAreaId.trim() != ''">
+			and t.parent_area_id like concat('%',#{parentAreaId},'%')
+		</if>
+		<if test="state != null and state.trim() != ''">
+			and t.state =#{state}
+		</if>
+	</select>
+
+	<select id="queryList" resultType="com.github.al.entity.Area">
+		select t.*,(select area_name from t_area  where area_id=t.parent_area_id) as parent_area_name
+		from t_area t
+		where 1=1
+		<if test="areaName != null and areaName.trim() != ''">
+			and t.area_name like concat('%',#{areaName},'%')
+		</if>
+		<if test="xzCode != null and xzCode.trim() != ''">
+			and t.xz_code like concat('%',#{xzCode},'%')
+		</if>
+		<if test="areaLevel != null and areaLevel.trim() != ''">
+			and t.area_level like concat('%',#{areaLevel},'%')
+		</if>
+		<if test="state != null and state.trim() != ''">
+			and t.state =#{state}
+		</if>
+		order by t.area_level asc, t.xz_code asc
+
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryTotal" resultType="int">
+		select count(*) from t_area t WHERE 1=1
+		<if test="areaName != null and areaName.trim() != ''">
+			and t.area_name like concat('%',#{areaName},'%')
+		</if>
+		<if test="xzCode != null and xzCode.trim() != ''">
+			and t.xz_code like concat('%',#{xzCode},'%')
+		</if>
+		<if test="areaLevel != null and areaLevel.trim() != ''">
+			and t.area_level like concat('%',#{areaLevel},'%')
+		</if>
+		<if test="state != null and state.trim() != ''">
+			and t.state =#{state}
+		</if>
+	</select>
+
+
+	<select id="getCount" resultType="int">
+		select count(*) from t_area t WHERE 1=1
+		<if test="areaName != null and areaName.trim() != ''">
+			and t.area_name = #{areaName}
+		</if>
+		<if test="xzCode != null and xzCode.trim() != ''">
+			and t.xz_code = #{xzCode}
+		</if>
+	</select>
+
+	<insert id="save" parameterType="com.github.al.entity.Area">
+		insert into t_area
+		(
+		`area_id`,
+		`area_name`,
+		`en_name`,
+		`word_index`,
+		`parent_area_id`,
+		`sort_no`,
+		`area_level`,
+		`is_city`,
+		`region`,
+		`level_area`,
+		`state`,
+		`post_code`,
+		`xz_code`
+		)
+		values
+		(
+		#{areaId},
+		#{areaName},
+		#{enName},
+		#{wordIndex},
+		#{parentAreaId},
+		#{sortNo},
+		#{areaLevel},
+		#{isCity},
+		#{region},
+		#{levelArea},
+		#{state},
+		#{postCode},
+		#{xzCode}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.github.al.entity.Area">
+		update t_area
+		<set>
+			<if test="areaName != null">`area_name` = #{areaName}, </if>
+			<if test="enName != null">`en_name` = #{enName}, </if>
+			<if test="wordIndex != null">`word_index` = #{wordIndex}, </if>
+			<if test="parentAreaId != null">`parent_area_id` = #{parentAreaId}, </if>
+			<if test="sortNo != null">`sort_no` = #{sortNo}, </if>
+			<if test="areaLevel != null">`area_level` = #{areaLevel}, </if>
+			<if test="isCity != null">`is_city` = #{isCity}, </if>
+			<if test="region != null">`region` = #{region}, </if>
+			<if test="levelArea != null">`level_area` = #{levelArea}, </if>
+			<if test="state != null">`state` = #{state}, </if>
+			<if test="postCode != null">`post_code` = #{postCode}, </if>
+			<if test="xzCode != null">`xz_code` = #{xzCode}</if>
+		</set>
+		where area_id = #{areaId}
+	</update>
+
+	<delete id="delete">
+		delete from t_area where area_id = #{value}
+	</delete>
+
+
+
+	<delete id="deleteBatch">
+		delete from t_area where area_id in
+		<foreach item="areaId" collection="array" open="(" separator="," close=")">
+			#{areaId}
+		</foreach>
+	</delete>
+
+</mapper>

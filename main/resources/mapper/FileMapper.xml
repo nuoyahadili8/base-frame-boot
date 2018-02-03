@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.al.dao.FileDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.github.al.entity.File" id="fileMap">
+        <result property="id" column="id"/>
+        <result property="uploadId" column="upload_id"/>
+        <result property="url" column="url"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileType" column="file_type"/>
+        <result property="fileSize" column="file_size"/>
+		<result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<select id="get" resultType="com.github.al.entity.File">
+		select * from sys_file where id = #{value}
+	</select>
+	<select id="getFileList" resultType="com.github.al.entity.File">
+		select * from sys_file where upload_id IN (#{value})
+	</select>
+	<select id="getFileListByUUID"  resultType="com.github.al.entity.File">
+		select * from sys_file where upload_id IN
+		<foreach item="item" index="index" collection="list"
+				 open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="getByRelationId" parameterType="String" resultType="com.github.al.entity.File">
+		select * from sys_file where upload_id = #{value}
+	</select>
+
+	<select id="getList" resultType="com.github.al.entity.File">
+		select * from sys_file t <include refid="where_clause" />
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="getCount" resultType="int">
+		select count(*) from sys_file t  <include refid="where_clause" />
+	</select>
+
+    <!-- 搜索数据区域 -->
+    <sql id="where_clause">
+        <where>
+            1=1
+            <if test="id != null and id != ''"> and t.id = #{id} </if>
+    		<if test="idVague != null and idVague != ''"> and t.id like concat('%',#{idVague},'%') </if>
+            <if test="uploadId != null and uploadId != ''"> and t.upload_id = #{uploadId} </if>
+    		<if test="uploadIdVague != null and uploadIdVague != ''"> and t.upload_id like concat('%',#{uploadIdVague},'%') </if>
+            <if test="url != null and url != ''"> and t.url = #{url} </if>
+    		<if test="urlVague != null and urlVague != ''"> and t.url like concat('%',#{urlVague},'%') </if>
+            <if test="fileName != null and fileName != ''"> and t.file_name = #{fileName} </if>
+    		<if test="fileNameVague != null and fileNameVague != ''"> and t.file_name like concat('%',#{fileNameVague},'%') </if>
+            <if test="createTime != null and createTime != ''"> and t.create_time = #{createTime} </if>
+    		<if test="createTimeVague != null and createTimeVague != ''"> and t.create_time like concat('%',#{createTimeVague},'%') </if>
+            <if test="fileType != null and fileType != ''"> and t.file_type = #{fileType} </if>
+    		<if test="fileTypeVague != null and fileTypeVague != ''"> and t.file_type like concat('%',#{fileTypeVague},'%') </if>
+            <if test="fileSize != null and fileSize != ''"> and t.file_size = #{fileSize} </if>
+    		<if test="fileSizeVague != null and fileSizeVague != ''"> and t.file_size like concat('%',#{fileSizeVague},'%') </if>
+        </where>
+    </sql>
+	 
+	<insert id="save" parameterType="com.github.al.entity.File" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_file
+		(
+			`upload_id`, 
+			`url`, 
+			`file_name`, 
+			`create_time`, 
+			`file_type`, 
+			`file_size`
+		)
+		values
+		(
+			#{uploadId}, 
+			#{url}, 
+			#{fileName}, 
+			#{createTime}, 
+			#{fileType}, 
+			#{fileSize}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.github.al.entity.File">
+		update sys_file 
+		<set>
+			<if test="uploadId != null">`upload_id` = #{uploadId}, </if>
+			<if test="url != null">`url` = #{url}, </if>
+			<if test="fileName != null">`file_name` = #{fileName}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="fileType != null">`file_type` = #{fileType}, </if>
+			<if test="fileSize != null">`file_size` = #{fileSize}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from sys_file where id = #{value}
+	</delete>
+
+	<delete id="deleteByRelationId">
+		delete from sys_file where upload_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from sys_file where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

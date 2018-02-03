@@ -1,0 +1,66 @@
+package ${package}.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Map;
+
+import ${package}.dao.${className}Dao;
+import ${package}.entity.${className};
+import ${package}.service.${className}Service;
+
+
+
+
+@Service("${classname}Service")
+@Transactional
+public class ${className}ServiceImpl implements ${className}Service {
+	@Autowired
+	private ${className}Dao ${classname}Dao;
+	
+	@Override
+	public ${className} get(${pk.attrType} ${pk.attrname}){
+		return ${classname}Dao.get(${pk.attrname});
+	}
+
+	@Override
+	public List<${className}> getList(Map<String, Object> map){
+		return ${classname}Dao.getList(map);
+	}
+
+	@Override
+	public int getCount(Map<String, Object> map){
+		return ${classname}Dao.getCount(map);
+	}
+
+	@Override
+	public void save(${className} ${classname}){
+		${classname}Dao.save(${classname});
+	}
+
+	@Override
+	public void update(${className} ${classname}){
+		${classname}Dao.update(${classname});
+	}
+
+	@Override
+	public void delete(${pk.attrType} ${pk.attrname}){
+		${classname}Dao.delete(${pk.attrname});
+	}
+
+	@Override
+	public void deleteBatch(${pk.attrType}[] ${pk.attrname}s){
+		${classname}Dao.deleteBatch(${pk.attrname}s);
+	}
+
+    @Override
+    public void updateState(String[] ids,String stateValue) {
+        for (String id:ids){
+			${className} ${classname}=get(id);
+			${classname}.setState(stateValue);
+            update(${classname});
+        }
+    }
+	
+}

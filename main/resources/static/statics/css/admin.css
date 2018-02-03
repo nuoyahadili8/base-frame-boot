@@ -1,0 +1,196 @@
+.layui-main .logo {
+    color: #f1f1f1;
+    font-size: 18px;
+    line-height: 60px
+}
+
+.layui-main .top-menu {
+    position: absolute;
+    top: 0;
+    left: 200px;
+    font-size: 17px;
+    background: 0
+}
+
+.layui-main .operate {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: 0
+}
+
+.layui-footer {
+    text-align: center;
+    line-height: 44px
+}
+
+.layui-nav[lay-filter=left-menu] {
+    border-radius: 0
+}
+
+.layui-tab[lay-filter=top-tab] {
+    margin: 0
+}
+
+.left-menu {
+    display: none
+}
+
+.left-menu:first-child {
+    display: block
+}
+
+.layui-tab-content {
+    padding: 0 10px
+}
+
+iframe {
+    width: 100%;
+    border: 0
+}
+
+.content-search {
+    margin-top: 10px
+}
+
+.handle-btn {
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e2e2
+}
+
+.layui-table tbody tr.tableTrSelect:hover, .tableTrSelect {
+    background-color: #009688;
+    color: #fff
+}
+
+.center {
+    text-align: center
+}
+
+.layui-tab[lay-filter="top-tab"] .layui-tab-title li:first-child .layui-tab-close {
+    display: none
+}
+
+.top-left {
+    position: absolute;
+    line-height: 57px;
+    width: 185px
+}
+
+.menu-flexible {
+    color: #f1f1f1;
+    left: 157px;
+    float: right
+}
+
+
+.menu-flexible .layui-icon {
+    font-size: 23px
+}
+
+.top-menu * {
+    font-size: 15px
+}
+
+.skin-rade .layui-nav-child {
+    padding: 0;
+    box-shadow: 0;
+    border: 0;
+    background-color: unset
+}
+
+.skin-rade .layui-nav-child a {
+    height: 35px;
+    border-radius: 50%
+}
+
+.container {
+    border: 1px solid #e2e2e2;
+    margin-top: 5px
+}
+
+.table-list .layui-table td:first-child, .layui-table th:first-child {
+    border-left: 0
+}
+
+.table-list .layui-table td:last-child, .layui-table th:last-child {
+    border-right: 0
+}
+
+.table-list .layui-table tr:last-child td {
+    border-bottom: 0
+}
+
+.table-list .layui-table td {
+    cursor: pointer
+}
+
+.content-search {
+    border-bottom: 1px solid #e2e2e2;
+    padding-bottom: 10px
+}
+
+.content-search .layui-form {
+    margin: unset
+}
+
+.content-search .layui-inline:first-child .layui-form-label {
+    border-left: 0
+}
+
+.listTopFixed {
+    position: fixed;
+    top: 0;
+    background-color: #f2f2f2;
+    z-index: 9;
+    width: 100%;
+    border-bottom: 1px solid #e2e2e2
+}
+
+.layui-tab[lay-filter="top-tab"] .layui-tab-title {
+    float: left;
+    width: 100%
+}
+
+.layui-tab[lay-filter="top-tab"] .layui-tab-button {
+    position: absolute;
+    float: left;
+    right: 20px;
+    line-height: 40px
+}
+
+.admin-login {
+    width: 410px;
+    margin: 0 auto;
+    margin-top: 150px
+}
+
+.layui-elem-field {
+    border-radius: 20px;
+    background-color: aliceblue
+}
+
+.layui-form {
+    margin: 30px 10px 25px
+}
+
+.layui-form-item .input-code {
+    width: 160px
+}
+
+.layui-form-item .code {
+    width: 105px;
+    margin-right: 0
+}
+
+.submit-login {
+    margin-top: 30px
+}
+
+.submit-login .layui-btn {
+    margin-left: 284px
+}
+
+.layui-elem-field legend {
+    margin-left: 138px
+}

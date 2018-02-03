@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>cy-fast快速开发框架</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <script src="statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="statics/img/favicon.ico" media="screen"/>
+    <link rel="stylesheet" href="statics/css/bootstrap.min.css">
+    <link rel="stylesheet" href="statics/css/font-awesome.min.css">
+    <link rel="stylesheet" href="statics/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="statics/css/all-skins.min.css">
+    <link rel="stylesheet" href="statics/css/main.css">
+    <link rel="stylesheet" href="common/css/cyType.css">
+    <link rel="stylesheet" href="statics/plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="statics/css/font-awesome.min.css">
+    <link rel="stylesheet" href="statics/index/nav/navTab.css">
+    <link rel="stylesheet" href="statics/plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="statics/plugins/Huploadify/Huploadify.css">
+    <link rel="stylesheet" type="text/css" href="statics/plugins/ContextJS/css/context.standalone.css">
+
+</head>
+<!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper" id="rrapp" >
+    <header class="main-header">
+        <a href="javascript:void(0);" class="logo" style="background-color: #2991d9">
+
+            <span class="logo-mini"><b>cy</b></span>
+
+            <span class="logo-lg"><b>cy-fast快速开发框架</b></span>
+        </a>
+
+        <nav class="navbar navbar-static-top" role="navigation" style="background-color: #2991d9">
+
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+
+            <div style="float:left;color:#fff;">
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="javascript:createMenu('sys/menu/user');" ><i class="fa fa-cog"></i> 后台管理</a>
+                    </li>
+
+                    <li ><a href="javascript:createMenu('frontframe/json/frontMenu.json');"  ><i class="fa fa-cog"></i> 前端框架</a>
+                    </li>
+
+                </ul>
+            </div>
+
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li ><a href="javascript:;" onclick="reward()" style="color: gold"><i class="fa fa-jpy" ></i> &nbsp;打赏作者</a></li>
+                    <li ><a href="javascript:;" onclick="notice()" ><i class="fa fa-bell-o" ></i> &nbsp;公告</a></li>
+                    <li><a href="javascript:;" onclick="clearStorage()"><i class="fa fa-undo"></i> &nbsp;清除缓存</a></li>
+                    <li><a href="javascript:;" ><i class="fa fa-user"></i>&nbsp;<span class="username"></span></a></li>
+                    <li><a href="javascript:;" onclick="updatePassword()"><i class="fa fa-lock"></i> &nbsp;修改密码</a></li>
+                    <li><a href="logout"><i class="fa fa-sign-out"></i> &nbsp;退出系统</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- =============================================== -->
+
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <ul class="sidebar-menu">
+                <!--<li class="header">导航菜单</li>-->
+
+            </ul>
+        </section>
+
+    </aside>
+    <!-- =============================================== -->
+    <div class="content-wrapper" style="background-color: white">
+        <!-- Content Header (Page header) -->
+        <section class="content-header" style="padding:0;background-color: white">
+            <div id="navTab" class="tabsPage">
+                <div class="tabsPageHeader">
+                    <div class="tabsPageHeaderContent">
+                        <!-- 显示左右控制时添加 class="tabsPageHeaderMargin" -->
+                        <ul class="navTab-tab" style="left: 0px;">
+                            <li class="main selected" data-url="/index/main">
+                                <a href="javascript:;">
+                                    <span class="home_icon">我的主页</span>
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                    <div class="tabsLeft" style="display: none;">left</div>
+                    <!-- 禁用只需要添加一个样式 class="tabsLeft tabsLeftDisabled" -->
+                    <div class="tabsRight" style="display: none;">right</div>
+                    <!-- 禁用只需要添加一个样式 class="tabsRight tabsRightDisabled" -->
+
+                    <div class="tabsMore">more</div>
+                </div>
+            </div>
+        </section>
+        <!-- 菜单下拉显示 -->
+        <ul class="tabsMoreList" style="display: none;">
+            <li class="selected" data-url="/page/main/main.jsp">
+                <a href="javascript:;">我的主页</a>
+            </li>
+
+        </ul>
+
+        <!-- Main content -->
+        <section class="content" style="background:#fff;">
+            <iframe scrolling="yes" frameborder="0" class="cy-show"
+                    style="width:100%;min-height:200px;overflow:visible;background:#fff;" src="/index/main"></iframe>
+        </section>
+    </div>
+
+
+
+    <!-- 修改密码 -->
+    <div id="passwordLayer" style="display: none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">账号</div>
+                    <span class="label label-success username"  style="vertical-align: bottom;"></span>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">原密码</div>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="password" placeholder="原密码"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">新密码</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="newPassword" placeholder="新密码"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<script src="statics/plugins/ContextJS/js/context.js"></script>
+<script src="common/js/whole/setting.js"></script>
+<script src="common/js/whole/utils.js"></script>
+<script src="statics/index/nav/navTab.js"></script>
+<script src="statics/plugins/Huploadify/jquery.Huploadify.js" type="text/javascript" charset="utf-8"></script>
+<script src="common/js/HuploadTool.js" type="text/javascript" charset="utf-8"></script>
+<script src="statics/libs/bootstrap.min.js"></script>
+<script src="statics/libs/app.js"></script>
+<script src="statics/plugins/layer/layer.js"></script>
+<script src="js/index.js"></script>
+<script src="common/js/whole/cyLayer.js"></script>
+
+</body>
+</html>

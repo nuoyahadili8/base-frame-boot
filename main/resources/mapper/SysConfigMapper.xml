@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.al.dao.SysConfigDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap type="com.github.al.entity.SysConfig" id="sysConfigMap">
+		<result property="id" column="id"/>
+		<result property="code" column="code"/>
+		<result property="value" column="value"/>
+		<result property="status" column="status"/>
+		<result property="remark" column="remark"/>
+	</resultMap>
+
+	<select id="queryObject" resultType="com.github.al.entity.SysConfig">
+		select * from sys_config where id = #{value}
+	</select>
+
+	<select id="findByCode" resultType="com.github.al.entity.SysConfig">
+		select * from sys_config where code = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.github.al.entity.SysConfig">
+		select * from sys_config where  1=1
+		<if test="code != null and code.trim() != ''">
+			and `code` like concat('%',#{code},'%')
+		</if>
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by ${sidx} ${order}
+			</when>
+			<otherwise>
+				order by id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryTotal" resultType="int">
+		select count(*) from sys_config
+	</select>
+
+	<insert id="save" parameterType="com.github.al.entity.SysConfig" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_config
+		(
+		`code`,
+		`value`,
+		`status`,
+		`remark`
+		)
+		values
+		(
+		#{code},
+		#{value},
+		#{status},
+		#{remark}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.github.al.entity.SysConfig">
+		update sys_config
+		<set>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="value != null">`value` = #{value}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="remark != null">`remark` = #{remark}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delete">
+		delete from sys_config where id = #{value}
+	</delete>
+
+	<delete id="deleteBatch">
+		delete from sys_config where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="findRule" resultType="com.github.al.entity.SysConfig">
+		select * from sys_config where
+
+		<if test="money != null and money != null">
+			 code=#{money}
+		</if>
+		<if test="img != null and img != null">
+			or code=#{img}
+		</if>
+		<if test="shareImg != null and shareImg != null">
+			or code=#{shareImg}
+		</if>
+		<if test="shareUrl != null and shareUrl != null">
+			or code=#{shareUrl}
+		</if>
+		<if test="shareTitle != null and shareTitle != null">
+			or code=#{shareTitle}
+		</if>
+		<if test="shareDesc != null and shareDesc != null">
+			or code=#{shareDesc}
+		</if>
+	</select>
+
+	<update id="setRule" parameterType="com.github.al.entity.SysConfig">
+		update sys_config set value = #{value}  where code = #{code}
+	</update>
+</mapper>

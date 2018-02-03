@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.al.dao.OrganizeDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.github.al.entity.Organize" id="organizeMap">
+        <result property="orgId" column="org_id"/>
+        <result property="orgCode" column="org_code"/>
+        <result property="orgName" column="org_name"/>
+        <result property="parentOrgId" column="parent_org_id"/>
+        <result property="sortNo" column="sort_no"/>
+        <result property="state" column="state"/>
+        <result property="note" column="note"/>
+        <result property="inDate" column="in_date"/>
+        <result property="parent_org_name" column="parentOrgName"/>
+        <result property="parent_org_code" column="parentOrgCode"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.github.al.entity.Organize">
+		select * from t_organize where org_id = #{value}
+	</select>
+	<select id="queryByOrgCode" resultType="com.github.al.entity.Organize">
+
+		select * FROM t_organize where org_code=#{value}
+	</select>
+
+	<select id="queryByParentId" resultType="com.github.al.entity.Organize">
+		select * from t_organize where parent_org_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.github.al.entity.Organize">
+		select *,
+		(select b.org_name from t_organize b where b.org_id=t.parent_org_id) as  parent_org_name,
+		(select b.org_code from t_organize b where b.org_id=t.parent_org_id) as  parent_org_code
+		from t_organize t <include refid="where_clause" />
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by org_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_organize t  <include refid="where_clause" />
+	</select>
+
+    <!-- 搜索数据区域 -->
+    <sql id="where_clause">
+        <where>
+            1=1
+            <if test="orgId != null and orgId.trim() != ''"> and t.org_id = #{orgId} </if>
+            <if test="orgCode != null and orgCode.trim() != ''"> and t.org_code = #{orgCode} </if>
+            <if test="orgName != null and orgName.trim() != ''"> and t.org_name = #{orgName} </if>
+            <if test="parentOrgId != null and parentOrgId.trim() != ''"> and t.parent_org_id = #{parentOrgId} </if>
+            <if test="sortNo != null and sortNo.trim() != ''"> and t.sort_no = #{sortNo} </if>
+            <if test="state != null and state.trim() != ''"> and t.state = #{state} </if>
+            <if test="levelOrg != null and levelOrg.trim() != ''"> and t.level_org = #{levelOrg} </if>
+            <if test="theArea != null and theArea.trim() != ''"> and t.the_area = #{theArea} </if>
+            <if test="note != null and note.trim() != ''"> and t.note = #{note} </if>
+            <if test="inDate != null and inDate.trim() != ''"> and t.in_date = #{inDate} </if>
+        </where>
+    </sql>
+	 
+	<insert id="save" parameterType="com.github.al.entity.Organize">
+		insert into t_organize
+		(
+			`org_id`, 
+			`org_code`, 
+			`org_name`, 
+			`parent_org_id`,
+			`in_date`
+		)
+		values
+		(
+			#{orgId}, 
+			#{orgCode}, 
+			#{orgName}, 
+			#{parentOrgId},
+			#{inDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.github.al.entity.Organize">
+		update t_organize 
+		<set>
+			<if test="orgCode != null">`org_code` = #{orgCode}, </if>
+			<if test="orgName != null">`org_name` = #{orgName}, </if>
+			<if test="parentOrgId != null">`parent_org_id` = #{parentOrgId}, </if>
+
+			<if test="inDate != null">`in_date` = #{inDate}</if>
+		</set>
+		where org_id = #{orgId}
+	</update>
+	
+	<delete id="delete">
+		delete from t_organize where org_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_organize where org_id in 
+		<foreach item="orgId" collection="array" open="(" separator="," close=")">
+			#{orgId}
+		</foreach>
+	</delete>
+	<select id="getList" resultType="com.github.al.entity.Organize">
+		select *,
+		(select b.org_name from t_organize b where b.org_id=t.parent_org_id) as  parent_org_name
+		from t_organize t
+
+		  order by org_id desc
+	</select>
+</mapper>

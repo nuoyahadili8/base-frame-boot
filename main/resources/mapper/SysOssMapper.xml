@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.al.dao.SysOssDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.github.al.entity.SysOss" id="sysOssMap">
+        <result property="bucket" column="bucket"/>
+        <result property="url" column="url"/>
+        <result property="endpoint" column="endpoint"/>
+        <result property="accessKeyId" column="access_key_id"/>
+        <result property="accessKeySecret" column="access_key_secret"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<select id="get" resultType="com.github.al.entity.SysOss">
+		select * from sys_oss where bucket = #{value}
+	</select>
+
+	<select id="getList" resultType="com.github.al.entity.SysOss">
+		select * from sys_oss t <include refid="where_clause" />
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by bucket desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="getCount" resultType="int">
+		select count(*) from sys_oss t  <include refid="where_clause" />
+	</select>
+
+    <!-- 搜索数据区域 -->
+    <sql id="where_clause">
+        <where>
+            1=1
+            <if test="bucket != null and bucket != ''"> and t.bucket = #{bucket} </if>
+    		<if test="bucketVague != null and bucketVague != ''"> and t.bucket like concat('%',#{bucketVague},'%') </if>
+            <if test="url != null and url != ''"> and t.url = #{url} </if>
+    		<if test="urlVague != null and urlVague != ''"> and t.url like concat('%',#{urlVague},'%') </if>
+            <if test="endpoint != null and endpoint != ''"> and t.endpoint = #{endpoint} </if>
+    		<if test="endpointVague != null and endpointVague != ''"> and t.endpoint like concat('%',#{endpointVague},'%') </if>
+            <if test="accessKeyId != null and accessKeyId != ''"> and t.access_key_id = #{accessKeyId} </if>
+    		<if test="accessKeyIdVague != null and accessKeyIdVague != ''"> and t.access_key_id like concat('%',#{accessKeyIdVague},'%') </if>
+            <if test="accessKeySecret != null and accessKeySecret != ''"> and t.access_key_secret = #{accessKeySecret} </if>
+    		<if test="accessKeySecretVague != null and accessKeySecretVague != ''"> and t.access_key_secret like concat('%',#{accessKeySecretVague},'%') </if>
+            <if test="state != null and state != ''"> and t.state = #{state} </if>
+    		<if test="stateVague != null and stateVague != ''"> and t.state like concat('%',#{stateVague},'%') </if>
+            <if test="createTime != null and createTime != ''"> and t.create_time = #{createTime} </if>
+    		<if test="createTimeVague != null and createTimeVague != ''"> and t.create_time like concat('%',#{createTimeVague},'%') </if>
+        </where>
+    </sql>
+	 
+	<insert id="save" parameterType="com.github.al.entity.SysOss">
+		insert into sys_oss
+		(
+			`bucket`, 
+			`url`, 
+			`endpoint`, 
+			`access_key_id`, 
+			`access_key_secret`, 
+			`state`, 
+			`create_time`
+		)
+		values
+		(
+			#{bucket}, 
+			#{url}, 
+			#{endpoint}, 
+			#{accessKeyId}, 
+			#{accessKeySecret}, 
+			#{state}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.github.al.entity.SysOss">
+		update sys_oss 
+		<set>
+			<if test="url != null">`url` = #{url}, </if>
+			<if test="endpoint != null">`endpoint` = #{endpoint}, </if>
+			<if test="accessKeyId != null">`access_key_id` = #{accessKeyId}, </if>
+			<if test="accessKeySecret != null">`access_key_secret` = #{accessKeySecret}, </if>
+			<if test="state != null">`state` = #{state}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}</if>
+		</set>
+		where bucket = #{bucket}
+	</update>
+	
+	<delete id="delete">
+		delete from sys_oss where bucket = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from sys_oss where bucket in 
+		<foreach item="bucket" collection="array" open="(" separator="," close=")">
+			#{bucket}
+		</foreach>
+	</delete>
+
+</mapper>

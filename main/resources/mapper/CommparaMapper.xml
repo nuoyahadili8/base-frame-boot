@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.al.dao.CommparaDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.github.al.entity.Commpara" id="commparaMap">
+        <result property="paraId" column="para_id"/>
+        <result property="paraCode" column="para_code"/>
+        <result property="paraName" column="para_name"/>
+        <result property="paraKey" column="para_key"/>
+        <result property="sortNo" column="sort_no"/>
+        <result property="state" column="state"/>
+		<result property="code" column="code" />
+		<result property="value" column="value" />
+    </resultMap>
+
+	<select id="queryObject" resultType="com.github.al.entity.Commpara">
+		select * from sys_commpara where para_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.github.al.entity.Commpara">
+		select * from sys_commpara t <include refid="where_clause" />
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by para_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from sys_commpara t  <include refid="where_clause" />
+	</select>
+
+    <!-- 搜索数据区域 -->
+    <sql id="where_clause">
+        <where>
+            1=1
+            <if test="paraId != null and paraId.trim() != ''"> and t.para_id = #{paraId} </if>
+            <if test="paraCode != null and paraCode.trim() != ''"> and t.para_code = #{paraCode} </if>
+			<if test="paraCodeVague != null and paraCodeVague != ''"> and t.para_code like concat('%',#{paraCodeVague},'%') </if>
+            <if test="paraName != null and paraName.trim() != ''"> and t.para_name = #{paraName} </if>
+            <if test="paraKey != null and paraKey.trim() != ''"> and t.para_key = #{paraKey} </if>
+            <if test="sortNo != null and sortNo.trim() != ''"> and t.sort_no = #{sortNo} </if>
+            <if test="state != null and state.trim() != ''"> and t.state = #{state} </if>
+        </where>
+    </sql>
+	 
+	<insert id="save" parameterType="com.github.al.entity.Commpara" useGeneratedKeys="true" keyProperty="paraId">
+		insert into sys_commpara
+		(
+			`para_code`, 
+			`para_name`, 
+			`para_key`, 
+			`sort_no`, 
+			`state`
+		)
+		values
+		(
+			#{paraCode}, 
+			#{paraName}, 
+			#{paraKey}, 
+			#{sortNo}, 
+			#{state}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.github.al.entity.Commpara">
+		update sys_commpara 
+		<set>
+			<if test="paraCode != null">`para_code` = #{paraCode}, </if>
+			<if test="paraName != null">`para_name` = #{paraName}, </if>
+			<if test="paraKey != null">`para_key` = #{paraKey}, </if>
+			<if test="sortNo != null">`sort_no` = #{sortNo}, </if>
+			<if test="state != null">`state` = #{state}</if>
+		</set>
+		where para_id = #{paraId}
+	</update>
+	
+	<delete id="delete">
+		delete from sys_commpara where para_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from sys_commpara where para_id in 
+		<foreach item="paraId" collection="array" open="(" separator="," close=")">
+			#{paraId}
+		</foreach>
+	</delete>
+
+
+	<select id="getCodeValues" resultType="com.github.al.entity.Commpara">
+		select para_key as code,para_name as value from sys_commpara where  `para_code` =#{codeName} order by sort_no asc
+	</select>
+
+	<select id="findByVerify" resultType="com.github.al.entity.Commpara">
+		select * from sys_commpara where para_code = #{paraCode} and para_key=#{paraKey}
+	</select>
+
+</mapper>
